@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MindAR - Aldea + Dos Modelos</title>
+    <title>MindAR - ilios + Modelos</title>
 
     <!-- Librerías -->
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
@@ -60,16 +60,16 @@
 
       <a-camera look-controls="enabled: false"></a-camera>
 
-      <!-- Solo un target: en él ponemos fondo + dos personajes -->
+      <!-- Target principal -->
       <a-entity id="example-target" mindar-image-target="targetIndex: 0">
-        <a-plane src="#aldea" width="1.4" height="0.7" position="0 0 -0.08"></a-plane>
+        <a-plane src="#ilios" width="1.4" height="0.7" position="0 0 -0.08"></a-plane>
 
         <!-- SLOT izquierdo -->
-        <a-entity id="slot1" gltf-model="#naruto" animation-mixer
+        <a-entity id="slot1" gltf-model="#sitarbuckss" animation-mixer
                   position="-0.3 -0.02 0.05" scale="0.4 0.4 0.4"></a-entity>
 
         <!-- SLOT derecho -->
-        <a-entity id="slot2" gltf-model="#sasuke" animation-mixer
+        <a-entity id="slot2" gltf-model="#HORNET" animation-mixer
                   position="0.3 -0.02 0.05" scale="0.4 0.4 0.4"></a-entity>
       </a-entity>
     </a-scene>
@@ -82,7 +82,7 @@
           arSystem = sceneEl.systems["mindar-image-system"];
         });
 
-        const models = ['#HORNET', '#sitarbuckss'];
+        const models = ['#sitarbuckss', '#HORNET'];
         let leftIndex = 0;
         let rightIndex = 1;
 
