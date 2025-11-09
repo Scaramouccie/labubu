@@ -12,7 +12,6 @@
 
     <style>
       body { margin: 0; font-family: sans-serif; }
-      /* Overlay de escaneo */
       #scan-overlay {
         position: absolute; top:0; left:0; right:0; bottom:0;
         background: rgba(0,0,0,0.7); color: white; display: flex;
@@ -20,7 +19,6 @@
       }
       #scan-overlay.hidden { display: none; }
 
-      /* Panel de botones */
       #ui-panel {
         position: fixed; bottom: 10px; left: 10px;
         display: flex; flex-direction: column; gap: 6px;
@@ -35,10 +33,8 @@
   </head>
 
   <body>
-    <!-- Overlay de escaneo -->
     <div id="scan-overlay">Apunta tu cámara al marcador...</div>
 
-    <!-- Panel de control -->
     <div id="ui-panel">
       <button id="startBtn">Iniciar AR</button>
       <button id="pauseBtn">Pausar AR</button>
@@ -54,22 +50,20 @@
              device-orientation-permission-ui="enabled: false">
 
       <a-assets>
-        <!-- Fondo -->
         <img id="ilios" src="ilios.jpg">
-        <!-- Modelos -->
         <a-asset-item id="rana" src="rana.glb"></a-asset-item>
         <a-asset-item id="HORNET" src="HORNET.glb"></a-asset-item>
       </a-assets>
 
       <a-camera look-controls="enabled: false"></a-camera>
 
-      <!-- Target principal -->
       <a-entity id="example-target" mindar-image-target="targetIndex: 0">
         <a-plane src="#ilios" width="1.4" height="0.7" position="0 0 -0.08"></a-plane>
 
-        <!-- SLOT izquierdo -->
+        <!-- SLOT izquierdo: rana mirando al frente -->
         <a-entity id="slot1" gltf-model="#rana" animation-mixer
-                  position="-0.3 -0.02 0.05" scale="0.4 0.4 0.4"></a-entity>
+                  position="-0.3 -0.02 0.05" scale="0.4 0.4 0.4"
+                  rotation="0 180 0"></a-entity>
 
         <!-- SLOT derecho -->
         <a-entity id="slot2" gltf-model="#HORNET" animation-mixer
@@ -85,7 +79,6 @@
           arSystem = sceneEl.systems["mindar-image-system"];
         });
 
-        // Lista de modelos disponibles
         const models = ['#rana', '#HORNET'];
         let leftIndex = 0;
         let rightIndex = 1;
@@ -93,16 +86,16 @@
         const slot1 = document.querySelector('#slot1');
         const slot2 = document.querySelector('#slot2');
 
-        // --- Función mejorada para cambiar modelo ---
         function changeModel(slot, index) {
-          slot.removeAttribute('gltf-model'); // eliminar modelo anterior
+          slot.removeAttribute('gltf-model');
           setTimeout(() => {
-            slot.setAttribute('gltf-model', models[index]); // cargar nuevo
-            slot.setAttribute('animation-mixer', ''); // reactivar animaciones
-          }, 200); // pequeña pausa para limpiar correctamente
+            slot.setAttribute('gltf-model', models[index]);
+            slot.setAttribute('animation-mixer', '');
+            // Mantener la rotación para que siempre mire al frente
+            if(slot.id === "slot1") slot.setAttribute('rotation', '0 180 0');
+          }, 200);
         }
 
-        // --- Botones de control ---
         document.querySelector('#startBtn').addEventListener('click', ()=> arSystem.start());
         document.querySelector('#pauseBtn').addEventListener('click', ()=> arSystem.pause(true));
         document.querySelector('#resumeBtn').addEventListener('click', ()=> arSystem.unpause());
@@ -117,7 +110,6 @@
           changeModel(slot2, rightIndex);
         });
 
-        // --- Eventos de MindAR ---
         const target = document.querySelector('#example-target');
         target.addEventListener("targetFound", ()=> console.log("✅ Target encontrado"));
         target.addEventListener("targetLost", ()=> console.log("❌ Target perdido"));
