@@ -60,7 +60,7 @@
       <a-entity id="example-target" mindar-image-target="targetIndex: 0">
         <a-plane src="#ilios" width="1.4" height="0.7" position="0 0 -0.08"></a-plane>
 
-        <!-- SLOT izquierdo: rana mirando al frente -->
+        <!-- SLOT izquierdo: rana mirando al frente (-90 grados) -->
         <a-entity id="slot1" gltf-model="#rana" animation-mixer
                   position="-0.3 -0.02 0.05" scale="0.4 0.4 0.4"
                   rotation="0 -90 0"></a-entity>
@@ -86,14 +86,18 @@
         const slot1 = document.querySelector('#slot1');
         const slot2 = document.querySelector('#slot2');
 
+        // Función para cambiar modelo, manteniendo rotación de la rana
         function changeModel(slot, index) {
           slot.removeAttribute('gltf-model');
-          setTimeout(() => {
-            slot.setAttribute('gltf-model', models[index]);
+          slot.setAttribute('gltf-model', models[index]);
+
+          slot.addEventListener('model-loaded', function handler() {
+            if(slot.id === "slot1") {
+              slot.setAttribute('rotation', '0 -90 0'); // rana mirando al frente
+            }
             slot.setAttribute('animation-mixer', '');
-            // Mantener la rotación para que siempre mire al frente
-            if(slot.id === "slot1") slot.setAttribute('rotation', '0 180 0');
-          }, 200);
+            slot.removeEventListener('model-loaded', handler);
+          });
         }
 
         document.querySelector('#startBtn').addEventListener('click', ()=> arSystem.start());
