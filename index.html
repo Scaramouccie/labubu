@@ -86,6 +86,43 @@
         const slot1 = document.querySelector('#slot1');
         const slot2 = document.querySelector('#slot2');
 
-        // Cambiar modelo con rotación -90 para la rana en ambos slots
+        // Función para cambiar modelo, aplicando rotación según el slot
         function changeModel(slot, index) {
           slot.removeAttribute('gltf-model');
+          slot.setAttribute('gltf-model', models[index]);
+
+          slot.addEventListener('model-loaded', function handler() {
+            // Aplicar rotación correcta a la rana según el slot
+            if(models[index] === "#rana") {
+              if(slot.id === "slot1") {
+                slot.setAttribute('rotation', '0 -90 0'); // izquierda
+              } else if(slot.id === "slot2") {
+                slot.setAttribute('rotation', '0 90 0');  // derecha
+              }
+            }
+            slot.setAttribute('animation-mixer', '');
+            slot.removeEventListener('model-loaded', handler);
+          });
+        }
+
+        document.querySelector('#startBtn').addEventListener('click', ()=> arSystem.start());
+        document.querySelector('#pauseBtn').addEventListener('click', ()=> arSystem.pause(true));
+        document.querySelector('#resumeBtn').addEventListener('click', ()=> arSystem.unpause());
+
+        document.querySelector('#changeLeftBtn').addEventListener('click', ()=>{
+          leftIndex = (leftIndex + 1) % models.length;
+          changeModel(slot1, leftIndex);
+        });
+
+        document.querySelector('#changeRightBtn').addEventListener('click', ()=>{
+          rightIndex = (rightIndex + 1) % models.length;
+          changeModel(slot2, rightIndex);
+        });
+
+        const target = document.querySelector('#example-target');
+        target.addEventListener("targetFound", ()=> console.log("✅ Target encontrado"));
+        target.addEventListener("targetLost", ()=> console.log("❌ Target perdido"));
+      });
+    </script>
+  </body>
+</html>
